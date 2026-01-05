@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import os
+import joblib
 
 # ---------------------------------
 # Page Configuration
@@ -15,10 +16,12 @@ st.set_page_config(
 # ---------------------------------
 # Safe Base Directory
 # ---------------------------------
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-MODEL_PATH = os.path.join(BASE_DIR, "rf_rent_model.pkl")
-ENCODER_PATH = os.path.join(BASE_DIR, "encoders.pkl")
+model = joblib.load(os.path.join(BASE_DIR, "rf_rent_model.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "scaler.pkl"))
 
 # ---------------------------------
 # Load Model & Encoders
