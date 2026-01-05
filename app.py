@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
-import pickle
-import os
 import joblib
+import os
 
 # ---------------------------------
 # Page Configuration
@@ -14,27 +13,21 @@ st.set_page_config(
 )
 
 # ---------------------------------
-# Safe Base Directory
+# Base Directory
 # ---------------------------------
-
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-model = joblib.load(os.path.join(BASE_DIR, "rf_rent_model.pkl"))
-scaler = joblib.load(os.path.join(BASE_DIR, "scaler.pkl"))
+MODEL_PATH = os.path.join(BASE_DIR, "rf_rent_model.pkl")
+ENCODER_PATH = os.path.join(BASE_DIR, "encoders.pkl")
 
 # ---------------------------------
 # Load Model & Encoders
 # ---------------------------------
 try:
-    with open(MODEL_PATH, "rb") as f:
-        model = pickle.load(f)
-
-    with open(ENCODER_PATH, "rb") as f:
-        encoders = pickle.load(f)
-
+    model = joblib.load(MODEL_PATH)
+    encoders = joblib.load(ENCODER_PATH)
 except Exception as e:
-    st.error("❌ Model files not loaded")
+    st.error("❌ Failed to load model or encoders")
     st.exception(e)
     st.stop()
 
@@ -89,5 +82,5 @@ if st.button("Predict Rent 💰"):
         prediction = model.predict(input_df)[0]
         st.success(f"🏷️ Estimated Monthly Rent: ₹ {prediction:,.0f}")
     except Exception as e:
-        st.error("Prediction failed")
+        st.error("❌ Prediction failed")
         st.exception(e)
